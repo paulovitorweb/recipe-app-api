@@ -52,7 +52,7 @@ jobs:
         DB_HOST: localhost
         DB_NAME: app
         DB_USER: postgres
-        DB_PASS: supersecretpassword
+        DB_PASSWORD: supersecretpassword
     - name: Run Tests
       run: |
         python app/manage.py test app/ && flake8 --config app/.flake8
