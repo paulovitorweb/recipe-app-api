@@ -10,6 +10,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: localhost
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: supersecretpassword
 
     services:
       # Label used to access the service container
@@ -18,7 +23,9 @@ jobs:
         image: postgres:10-alpine
         # Provide the password for postgres
         env:
-          POSTGRES_PASSWORD: supersecretpassword
+          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: ${{ env.DB_USER }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -48,11 +55,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run migrations
       run: python app/manage.py wait_for_db && python app/manage.py migrate
-      env:
-        DB_HOST: localhost
-        DB_NAME: postgres
-        DB_USER: postgres
-        DB_PASSWORD: supersecretpassword
     - name: Run Tests
       run: |
         flake8 --config app/.flake8 && python app/manage.py test app/
